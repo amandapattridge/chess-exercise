@@ -10,7 +10,7 @@ class Board extends Component{
    
     renderRow(y){
         return (
-            <Row yValue={y} />
+            <Row yValue={y} handleClick={(x,y) => this.props.handleClick(x,y)} squares={this.props.squares[y]} />
         )
    }
 

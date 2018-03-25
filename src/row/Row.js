@@ -6,7 +6,7 @@ function Row(props){
     function renderSquare(x){
         return (
             <div>
-                <Square xValue={x} yValue={props.yValue}/>
+                <Square xValue={x} yValue={props.yValue} square={props.squares[x]} onClick={()=> {props.handleClick(x, props.yValue)}}/>
             </div>       
         )
     }
