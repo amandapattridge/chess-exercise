@@ -5,7 +5,9 @@ function Square(props){
     let squareColor = (props.xValue + props.yValue) % 2 === 0 ? '#fff' : '#33b5e5';
 
     return (
-        <div className='square' style={{background: squareColor}} onClick={props.onClick}></div>
+        <div className='square' style={{background: squareColor}} onClick={props.onClick}>
+            {props.square}
+        </div>
     );
 }
 
