@@ -29,9 +29,11 @@ class Game extends Component {
         let initialY = this.state.initialY;
         let validMoves = this.state.validMoves
 
+        // if user previously seleted a piece and clicks on another square containinga piece
         if(squares[y][x].value && pieceSelected && (initialX !== x && initialY !== y)){
-            return;
+            squares[y][x].validMove = false;
         } else if (pieceSelected){
+            // if user clicks on valid move square, move piece and reset valid move data
             if(squares[y][x].validMove || squares[y][x].selected){
                 squares[initialY][initialX].value = '';
                 squares[initialY][initialX].selected = false;
@@ -41,8 +43,18 @@ class Game extends Component {
                 initialX = undefined;
                 initialY = undefined;
 
-                squares = this.setValidMoves(squares, validMoves, undefined);
+                squares = squares.map((row) => {
+                   return row.map((square) => {
+                        square.validMove = undefined;
+                        return square;
+                    })
+                })
+            // if user clicks on an empty square that is an invalid move, mark move as invalid
+            } else {
+                squares[y][x].validMove = false;
             }
+        // if user has not selected a piece and clicks on a square containing apiece
+        // select teh piece and calculate posible moves
         } else if (squares[y][x].value) {
             pieceSelected = squares[y][x].value;
             squares[y][x].selected = true;
@@ -76,7 +88,6 @@ class Game extends Component {
     setValidMoves(squares, moves, value){
         moves.forEach((move) => {
             squares[move[1]][move[0]].validMove = value;
-            // squares[move[1]][move[0]].value = 'V'
         })
 
         return squares;
