@@ -4,7 +4,7 @@
 2. Navigate to the 'chess-exercise' directory from the command prompt
 3. Run 'npm install'
 4. After installation completes, run 'npm start'
-5. Visit http://localhost:3000/
+5. If browser window does not do so automatically, navigate to http://localhost:3000/
 
 To play, select one of the two pieces, then select where you would like to place it.
 
