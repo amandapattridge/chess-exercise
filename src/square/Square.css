@@ -1,10 +1,14 @@
 .square{
     float: left;
-    border: 1px solid #455a64;
+    border: 2px solid #455a64;
     width: 100px;
     height: 100px; 
 }
 
-/* .square:hover{
-    background-color: green;
-} */
+.valid-move:hover{
+    border:2px solid orange
+}
+
+.invalid-move:hover{
+    border:2px solid red
+}

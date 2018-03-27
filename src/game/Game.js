@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
 import Board from '../board/Board'
+import SquareData from '../square/squareData'
 import './Game.css';
 
 class Game extends Component {
     constructor(props){
         super(props)
         let squares = new Array(8).fill([]).map((row) =>{
-            return ['', '', '', '', '', '', '', '']
+            return [new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData()]
         }); // couldn't use Array construcor here; changing one value (below) changed whole 'column'
         
-        squares[0][5] = 'B'; // set inital bishop position
-        squares[0][2] = 'K'; // set initial knight position
+        squares[3][2].value = 'B'; // set inital bishop position
+        squares[0][2].value = 'K'; // set initial knight position
         this.state = {
             squares: squares, 
             pieceSelected: '',
-            initialX: null,
-            initialY: null,
+            initialX: undefined,
+            initialY: undefined,
+            validMoves: []
+
         }
     }
 
@@ -24,28 +27,112 @@ class Game extends Component {
         let squares = this.state.squares;
         let initialX = this.state.initialX;
         let initialY = this.state.initialY;
+        let validMoves = this.state.validMoves
 
-        if(squares[y][x] && pieceSelected){
+        if(squares[y][x].value && pieceSelected && (initialX !== x && initialY !== y)){
             return;
-        } else if (squares[y][x]) {
-            pieceSelected = squares[y][x];
+        } else if (pieceSelected){
+            if(squares[y][x].validMove){
+                squares[initialY][initialX].value = '';
+                squares[y][x].value = pieceSelected;
+                pieceSelected = '';
+                initialX = undefined;
+                initialY = undefined;
+
+                squares = this.setValidMoves(squares, validMoves, undefined);
+            }
+        } else if (squares[y][x].value) {
+            pieceSelected = squares[y][x].value;
             initialX = x;
             initialY = y;
-        } else if (pieceSelected){
-            squares[y][x] = pieceSelected;
-            squares[initialY][initialX] = '';
-            pieceSelected = '';
-            initialX = null;
-            initialY = null;
+
+            if (pieceSelected === 'B'){
+                // get and store valid moves, allows faster clearing of valid moves when piece is placed on next
+                // click (don't have to iterate over the whole table to remove valid moves)
+                validMoves = this.getValidBishopMoves(x, y, squares);
+                squares = this.setValidMoves(squares, validMoves, true);            
+            }
         }
 
         this.setState({
-            squares: squares, //create an empty 8x8 array
+            squares: squares,
             pieceSelected: pieceSelected,
             initialX: initialX,
             initialY: initialY,
+            validMoves: validMoves
         })
 
+    }
+
+    // add or remove valid move property to squares
+    setValidMoves(squares, moves, value){
+        moves.forEach((move) => {
+            squares[move[1]][move[0]].validMove = value;
+            // squares[move[1]][move[0]].value = 'V'
+        })
+
+        return squares;
+    }
+    
+    // returns an array of all valid moves for a bishop, including bishop's starting position
+    // ex. [[0,5], [4,1], [3,2]]
+    // does not include potenttial moves where a bishop would have to travel through a square occupied by another piece.
+    getValidBishopMoves(x, y, squares){
+        let validMoves = [[x, y]];
+
+        this.moveUpLeft(x,y, squares).forEach((move) => {validMoves.push(move)})
+        this.moveDownLeft(x,y, squares).forEach((move) => {validMoves.push(move)})
+        this.moveUpRight(x,y, squares).forEach((move) => {validMoves.push(move)})
+        this.moveDownRight(x,y, squares).forEach((move) => {validMoves.push(move)})
+
+        return validMoves;
+    }
+
+    moveUpLeft(x, y, squares, validMoves = []){
+        if(--x < 0 || --y < 0 || squares[y][x].value){
+            return validMoves;
+        }
+        
+        this.moveUpLeft(x, y, squares, validMoves);
+        validMoves.push([x, y])
+        return validMoves    
+    }
+
+    moveUpRight(x, y, squares, validMoves = []){
+        
+        if(++x > 7 || --y < 0 || squares[y][x].value){
+            return validMoves;
+        }
+        
+        this.moveUpRight(x, y, squares, validMoves);
+        validMoves.push([x, y])
+        return validMoves    
+    }
+
+    moveDownLeft(x, y, squares, validMoves = []){
+        if(--x < 0 || ++y > 7 || squares[y][x].value){
+            return validMoves;
+        }
+        
+        this.moveDownLeft(x, y, squares, validMoves);
+        validMoves.push([x, y])
+        return validMoves    
+    }
+
+    moveDownRight(x, y, squares, validMoves = []){
+        if(++x > 7 || ++y > 7 || squares[y][x].value){
+            return validMoves;
+        }
+        
+        this.moveDownRight(x, y, squares, validMoves);
+        validMoves.push([x, y])
+        return validMoves    
+    }
+
+
+
+    getValidKnightMoves(x, y){
+        
     }
 
     render() {
