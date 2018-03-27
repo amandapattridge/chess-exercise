@@ -52,6 +52,11 @@ class Game extends Component {
                 validMoves = this.getValidBishopMoves(x, y, squares);
                 squares = this.setValidMoves(squares, validMoves, true);            
             }
+
+            if (pieceSelected === 'K'){
+                validMoves = this.getValidKnightMoves(x, y);
+                squares = this.setValidMoves(squares, validMoves, true);
+            }
         }
 
         this.setState({
@@ -73,6 +78,8 @@ class Game extends Component {
 
         return squares;
     }
+
+    //Bishop movement
     
     // returns an array of all valid moves for a bishop, including bishop's starting position
     // ex. [[0,5], [4,1], [3,2]]
@@ -129,10 +136,18 @@ class Game extends Component {
         return validMoves    
     }
 
-
+    // Knight movement
 
     getValidKnightMoves(x, y){
+        let validMoves = [[x+2, y-1], [x+2, y+1],[x-2, y-1], [x-2, y+1], [x-1, y-2], [x-1, y+2], [x+1, y-2], [x+1, y+2]];
         
+        validMoves = validMoves.filter((move) => {
+            let x = move[0];
+            let y = move[1];
+            return (x >= 0 && x <= 7 && y >=0 && y <= 7)
+        });
+
+        return validMoves;
     }
 
     render() {
