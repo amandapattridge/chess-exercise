@@ -1,37 +1,31 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Row from '../row/Row';
 import './Board.css'
 
-class Board extends Component{
-   // eslint-disable-next-line
-    constructor(props){
-       super(props);
-   }
+function Board(props){
    
-    renderRow(y){
+    function renderRow(y){
         return (
-            <Row yValue={y} handleClick={(x,y) => this.props.handleClick(x,y)} squares={this.props.squares[y]} />
+            <Row yValue={y} handleClick={(x,y) => props.handleClick(x,y)} squares={props.squares[y]} />
         )
    }
 
    
-    render() {
     return (
-    <div className = 'board-container'>
-        <div className='name-field'>Amanda Pattridge</div>
-        <div className='board'>
-            {this.renderRow(0)}
-            {this.renderRow(1)}
-            {this.renderRow(2)}
-            {this.renderRow(3)}
-            {this.renderRow(4)}
-            {this.renderRow(5)}
-            {this.renderRow(6)}
-            {this.renderRow(7)}
+        <div className = 'board-container'>
+            <div className='name-field'>Amanda Pattridge</div>
+            <div className='board'>
+                {renderRow(0)}
+                {renderRow(1)}
+                {renderRow(2)}
+                {renderRow(3)}
+                {renderRow(4)}
+                {renderRow(5)}
+                {renderRow(6)}
+                {renderRow(7)}
+            </div>
         </div>
-    </div>
     );
-  }  
 }
 
 export default Board;
