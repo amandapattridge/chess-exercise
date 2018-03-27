@@ -10,7 +10,7 @@ class Game extends Component {
             return [new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData()]
         }); // couldn't use Array construcor here; changing one value (below) changed whole 'column'
         
-        squares[3][2].value = 'B'; // set inital bishop position
+        squares[0][5].value = 'B'; // set inital bishop position
         squares[0][2].value = 'K'; // set initial knight position
         this.state = {
             squares: squares, 
@@ -32,9 +32,11 @@ class Game extends Component {
         if(squares[y][x].value && pieceSelected && (initialX !== x && initialY !== y)){
             return;
         } else if (pieceSelected){
-            if(squares[y][x].validMove){
+            if(squares[y][x].validMove || squares[y][x].selected){
                 squares[initialY][initialX].value = '';
+                squares[initialY][initialX].selected = false;
                 squares[y][x].value = pieceSelected;
+                
                 pieceSelected = '';
                 initialX = undefined;
                 initialY = undefined;
@@ -43,6 +45,7 @@ class Game extends Component {
             }
         } else if (squares[y][x].value) {
             pieceSelected = squares[y][x].value;
+            squares[y][x].selected = true;
             initialX = x;
             initialY = y;
 
@@ -54,7 +57,7 @@ class Game extends Component {
             }
 
             if (pieceSelected === 'K'){
-                validMoves = this.getValidKnightMoves(x, y);
+                validMoves = this.getValidKnightMoves(x, y, squares);
                 squares = this.setValidMoves(squares, validMoves, true);
             }
         }
@@ -85,7 +88,7 @@ class Game extends Component {
     // ex. [[0,5], [4,1], [3,2]]
     // does not include potenttial moves where a bishop would have to travel through a square occupied by another piece.
     getValidBishopMoves(x, y, squares){
-        let validMoves = [[x, y]];
+        let validMoves = [];
 
         this.moveUpLeft(x,y, squares).forEach((move) => {validMoves.push(move)})
         this.moveDownLeft(x,y, squares).forEach((move) => {validMoves.push(move)})
@@ -138,13 +141,13 @@ class Game extends Component {
 
     // Knight movement
 
-    getValidKnightMoves(x, y){
+    getValidKnightMoves(x, y, squares){
         let validMoves = [[x+2, y-1], [x+2, y+1],[x-2, y-1], [x-2, y+1], [x-1, y-2], [x-1, y+2], [x+1, y-2], [x+1, y+2]];
         
         validMoves = validMoves.filter((move) => {
             let x = move[0];
             let y = move[1];
-            return (x >= 0 && x <= 7 && y >=0 && y <= 7)
+            return (x >= 0 && x <= 7 && y >=0 && y <= 7 && !squares[y][x].value)
         });
 
         return validMoves;
