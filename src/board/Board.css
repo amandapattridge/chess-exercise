@@ -1,4 +1,8 @@
-.board{
+.board-container{
     width: 800px;
-    margin: 30px auto;
+    margin: 50px auto;
+}
+
+.name-field {
+    margin: 10px 0;
 }

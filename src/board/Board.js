@@ -17,15 +17,18 @@ class Board extends Component{
    
     render() {
     return (
-    <div className='board'>
-        {this.renderRow(0)}
-        {this.renderRow(1)}
-        {this.renderRow(2)}
-        {this.renderRow(3)}
-        {this.renderRow(4)}
-        {this.renderRow(5)}
-        {this.renderRow(6)}
-        {this.renderRow(7)}
+    <div className = 'board-container'>
+        <div className='name-field'>Amanda Pattridge</div>
+        <div className='board'>
+            {this.renderRow(0)}
+            {this.renderRow(1)}
+            {this.renderRow(2)}
+            {this.renderRow(3)}
+            {this.renderRow(4)}
+            {this.renderRow(5)}
+            {this.renderRow(6)}
+            {this.renderRow(7)}
+        </div>
     </div>
     );
   }  
