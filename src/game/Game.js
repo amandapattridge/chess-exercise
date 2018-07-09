@@ -10,14 +10,18 @@ class Game extends Component {
             return [new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData()]
         }); // couldn't use Array construcor here; changing one value (below) changed whole 'column'
         
-        squares[0][0].value = 'R'; // set initial rook position
-        squares[0][1].value = 'K'; // set initial knight position
-        squares[0][2].value = 'B';
-        squares[0][3].value = 'Q';
-        squares[0][4].value = 'I';
-        squares[0][5].value = 'B'; // set inital bishop position
-        squares[0][6].value = 'K';        
-        squares[0][7].value = 'R';
+
+        const pieceOrder = 'RKBQIBKR'
+
+        squares[0] = squares[0].map((square, i) => {
+            square.value = pieceOrder.charAt(i);
+            return square
+        })
+
+        squares[1] = squares[1].map((square) => {
+            square.value = 'P';
+            return square;
+        })
 
         this.state = {
             squares: squares, 
@@ -94,6 +98,22 @@ class Game extends Component {
                 squares = this.setValidMoves(squares, validMoves, true);
 
             }
+            if (pieceSelected === 'Q'){
+                //since a  queen can move like a rook or a bishop, concat the valid moves of those two pieces in
+                //order to get valid queen moves
+                validMoves = this.getValidRookMoves(x, y, squares).concat(this.getValidBishopMoves(x, y, squares));
+                squares = this.setValidMoves(squares, validMoves, true);
+
+            }
+            if (pieceSelected === 'P'){
+                validMoves = this.getValidPawnMoves(x, y, squares)
+                squares = this.setValidMoves(squares, validMoves, true);
+            }
+
+            if(pieceSelected === 'I'){
+                validMoves = this.getValidKingMoves(x, y, squares);
+                squares = this.setValidMoves(squares, validMoves, true);
+            }
         }
 
         this.setState({
@@ -114,6 +134,20 @@ class Game extends Component {
         })
 
         return squares;
+
+    }
+
+    //Pawn movement
+    getValidPawnMoves(x, y, squares){
+        //TODO - when other color pieces are added, make capture by pawn a valid move and set movement direction
+        //by color
+        let validMoves = [];
+
+        if(++y <= 7) {
+            validMoves.push([x, y])
+        }
+
+        return validMoves;
 
     }
 
@@ -252,6 +286,18 @@ class Game extends Component {
 
         return validMoves;
 
+    }
+
+    getValidKingMoves(x, y, squares){
+        let validMoves = [[x-1, y-1], [x-1, y],[x-1, y+1], [x, y-1], [x, y+1], [x+1, y-1], [x+1, y], [x+1, y+1]];
+        
+        validMoves = validMoves.filter((move) => {
+            let x = move[0];
+            let y = move[1];
+            return (x >= 0 && x <= 7 && y >=0 && y <= 7 && !squares[y][x].value)
+        });
+
+        return validMoves;
     }
 
     render() {

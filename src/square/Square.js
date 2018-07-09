@@ -15,7 +15,8 @@ function Square(props){
         B: 'fas fa-chess-bishop',
         R: 'fas fa-chess-rook',
         Q: 'fas fa-chess-queen',
-        I: 'fas fa-chess-king'
+        I: 'fas fa-chess-king',
+        P: 'fas fa-chess-pawn'
     }
 
     // if square ic occupied, specify piece type
