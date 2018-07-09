@@ -10,8 +10,15 @@ class Game extends Component {
             return [new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData(), new SquareData()]
         }); // couldn't use Array construcor here; changing one value (below) changed whole 'column'
         
-        squares[0][5].value = 'B'; // set inital bishop position
+        squares[0][0].value = 'R'; // set initial rook position
         squares[0][1].value = 'K'; // set initial knight position
+        squares[0][2].value = 'B';
+        squares[0][3].value = 'Q';
+        squares[0][4].value = 'I';
+        squares[0][5].value = 'B'; // set inital bishop position
+        squares[0][6].value = 'K';        
+        squares[0][7].value = 'R';
+
         this.state = {
             squares: squares, 
             pieceSelected: '',
@@ -78,6 +85,12 @@ class Game extends Component {
             if (pieceSelected === 'K'){
 
                 validMoves = this.getValidKnightMoves(x, y, squares);
+                squares = this.setValidMoves(squares, validMoves, true);
+
+            }
+            if (pieceSelected === 'R'){
+
+                validMoves = this.getValidRookMoves(x, y, squares);
                 squares = this.setValidMoves(squares, validMoves, true);
 
             }
@@ -168,6 +181,61 @@ class Game extends Component {
         validMoves.push([x, y])
         return validMoves 
 
+    }
+
+    //Rook movement
+
+    getValidRookMoves(x, y, squares){
+
+        let validMoves = [];
+
+        this.moveUp(x,y, squares).forEach((move) => {validMoves.push(move)})
+        this.moveDown(x,y, squares).forEach((move) => {validMoves.push(move)})
+        this.moveRight(x,y, squares).forEach((move) => {validMoves.push(move)})
+        this.moveLeft(x,y, squares).forEach((move) => {validMoves.push(move)})
+
+        return validMoves;
+
+    }
+
+    moveDown(x, y, squares, validMoves = []){
+        if(++y > 7 || squares[y][x].value){
+            return validMoves;
+        }
+
+        this.moveDown(x, y, squares, validMoves);
+        validMoves.push([x, y])
+        return validMoves 
+    }
+
+    moveUp(x, y, squares, validMoves = []){
+        if(--y < 0 || squares[y][x].value){
+            return validMoves;
+        }
+
+        this.moveUp(x, y, squares, validMoves);
+        validMoves.push([x, y])
+        return validMoves 
+    }
+
+    moveRight(x, y, squares, validMoves = []){
+        if(++x > 7 || squares[y][x].value){
+            return validMoves;
+        }
+
+        this.moveRight(x, y, squares, validMoves);
+        validMoves.push([x, y])
+        return validMoves 
+    }
+
+    moveLeft(x, y, squares, validMoves = []){
+        if(--x < 0 || squares[y][x].value){
+            return validMoves;
+        }
+
+        this.moveLeft(x, y, squares, validMoves);
+        validMoves.push([x, y])
+        return validMoves 
     }
 
     // Knight movement

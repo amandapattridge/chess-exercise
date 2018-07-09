@@ -10,14 +10,17 @@ function Square(props){
     // get classes for hilighing valid/invlaid moves
     const validHighlightClass = (isValidMove === true ? ' valid-move' : (isValidMove === false ? ' invalid-move' : ''));
     const pieceSelectedClass = props.square.selected ? ' selected' : '';
+    const pieceTypeClass = {
+        K: 'fas fa-chess-knight',
+        B: 'fas fa-chess-bishop',
+        R: 'fas fa-chess-rook',
+        Q: 'fas fa-chess-queen',
+        I: 'fas fa-chess-king'
+    }
 
     // if square ic occupied, specify piece type
-    let iconClass = '';
-    if(props.square.value === 'K'){
-        iconClass = 'fas fa-chess-knight';
-    } else if(props.square.value === 'B'){
-        iconClass = 'fas fa-chess-bishop';
-    }
+    let iconClass;
+    iconClass = pieceTypeClass[props.square.value] || '';
 
     return (
     <div className='container'>
