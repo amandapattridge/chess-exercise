@@ -13,13 +13,35 @@ class Game extends Component {
 
         const pieceOrder = 'RKBQIBKR'
 
+        //Place black pieces
+
+        //Place back row
         squares[0] = squares[0].map((square, i) => {
             square.value = pieceOrder.charAt(i);
+            square.color = 'black';
             return square
         })
 
+        //Place front row
         squares[1] = squares[1].map((square) => {
             square.value = 'P';
+            square.color = 'black';
+            return square;
+        })
+
+        //Place white pieces
+
+        //Place back row
+        squares[7] = squares[7].map((square, i) => {
+            square.value = pieceOrder.charAt(i);
+            square.color = 'white';
+            return square
+        })
+
+        //Place front row
+        squares[6] = squares[6].map((square) => {
+            square.value = 'P';
+            square.color = 'white';
             return square;
         })
 
