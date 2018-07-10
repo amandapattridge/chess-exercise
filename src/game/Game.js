@@ -13,6 +13,8 @@ class Game extends Component {
 
         const pieceOrder = 'RKBQIBKR'
 
+        //TODO - refactor placement method to one reusable method
+
         //Place black pieces
 
         //Place back row
@@ -73,10 +75,12 @@ class Game extends Component {
 
                 squares[initialY][initialX].value = '';
                 squares[initialY][initialX].selected = false;
+                let color = squares[initialY][initialX].color;
                 initialX = undefined;
                 initialY = undefined;
 
                 squares[y][x].value = pieceSelected;
+                squares[y][x].color = color;
                 pieceSelected = '';
 
                 squares = squares.map((row) => {
@@ -128,7 +132,7 @@ class Game extends Component {
 
             }
             if (pieceSelected === 'P'){
-                validMoves = this.getValidPawnMoves(x, y, squares)
+                validMoves = this.getValidPawnMoves(x, y, squares, squares[y][x].color);
                 squares = this.setValidMoves(squares, validMoves, true);
             }
 
@@ -160,12 +164,14 @@ class Game extends Component {
     }
 
     //Pawn movement
-    getValidPawnMoves(x, y, squares){
+    getValidPawnMoves(x, y, squares, color){
         //TODO - when other color pieces are added, make capture by pawn a valid move and set movement direction
         //by color
         let validMoves = [];
 
-        if(++y <= 7) {
+        if(color === 'black' && ++y <= 7 && !squares[y][x].value) {
+            validMoves.push([x, y])
+        } else if (color === 'white' && --y >= 0 && !squares[y][x].value){
             validMoves.push([x, y])
         }
 
